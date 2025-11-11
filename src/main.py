@@ -32,7 +32,7 @@ def draw_bullets():
 def game_loop():
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     draw_player()
-    draw_enemies()
+    draw_enemies()git status
     draw_bullets()
 
 def key_down(event):
