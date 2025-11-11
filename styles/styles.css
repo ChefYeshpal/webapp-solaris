@@ -1,0 +1,19 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 100%;
+    position: relative;
+    padding-top: 75%; /* them aspect ratio of 4:3 to make it arcade babes */
+}
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

@@ -20,5 +20,6 @@ Just the classic space invader game, why so? because the other option was to mak
 - 11 Nov 2025
     - Created this repository
     - Added the base files
+        - Added basic code in `index.html`, `styles.css`, and `main.py`
     - Debated if I wanna use `js` or `py`
         - I'll try python first... lets see how that goes
