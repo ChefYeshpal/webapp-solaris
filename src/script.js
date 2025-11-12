@@ -15,13 +15,29 @@ class Game {
 
     initEnemies() {
         const gameWidth = this.gameContainer.width;
-        const spacing = 100;
-        const startX = (gameWidth / 2) - (spacing);
+        const horizontalSpacing = 80;
+        const verticalSpacing = 100;
         const startY = 50;
 
-        // 3 enemy's for now, ima probably have to change this later on because it needs to variable
-        for (let i = 0; i < 3; i++) {
-            this.enemies.push(new Enemy(startX + (i * spacing), startY));
+        // Generate symmetrical enemy patterns
+        // Lines: 1-3 (always less than 4)
+        // Enemies per line: 1-4 (always less than 5)
+        const numLines = Math.floor(Math.random() * 3) + 1;
+
+        for (let line = 0; line < numLines; line++) {
+            const numEnemiesInLine = Math.floor(Math.random() * 4) + 1;
+            const lineY = startY + (line * verticalSpacing);
+            
+            // Calculate starting X to center the line
+            const totalLineWidth = (numEnemiesInLine - 1) * horizontalSpacing;
+            const centerX = gameWidth / 2;
+            const startX = centerX - (totalLineWidth / 2);
+
+            // Create enemies symmetrically in THIS, THIS VERY SPECIFIC line
+            for (let i = 0; i < numEnemiesInLine; i++) {
+                const enemyX = startX + (i * horizontalSpacing);
+                this.enemies.push(new Enemy(enemyX, lineY));
+            }
         }
     }
 
