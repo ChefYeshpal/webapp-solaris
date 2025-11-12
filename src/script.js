@@ -10,10 +10,17 @@ class Game {
         this.enemies = [];
         this.lastTime = 0;
         this.level = 1;
+        this.score = 0;
         this.countdownActive = false;
         this.countdownTime = 0;
         this.countdownDuration = 5000;
+        
+        // UI Elements
+        this.scoreElement = document.getElementById('scoreValue');
+        this.levelElement = document.getElementById('levelValue');
+        
         this.initEnemies();
+        this.updateUI();
         this.start();
     }
 
@@ -82,6 +89,7 @@ class Game {
                 this.level++;
                 this.countdownActive = false;
                 this.countdownTime = 0;
+                this.updateUI();
                 this.initEnemies();
             }
         }
@@ -138,10 +146,18 @@ class Game {
                     // Remove projectile and enemy
                     this.player.projectiles.splice(i, 1);
                     this.enemies.splice(j, 1);
+                    this.score++;
+                    this.updateUI();
                     break;
                 }
             }
         }
+    }
+
+    updateUI() {
+        // Format score as 2-digit number with leading zeros
+        this.scoreElement.textContent = String(this.score).padStart(2, '0');
+        this.levelElement.textContent = String(this.level);
     }
 }
 
