@@ -1,3 +1,5 @@
+import { Projectile } from './projectile.js';
+
 export class Player {
     constructor(gameWidth, gameHeight) {
         this.gameWidth = gameWidth;
@@ -11,6 +13,9 @@ export class Player {
         this.moveRight = false;
         this.moveUp = false;
         this.moveDown = false;
+        this.projectiles = [];
+        this.shootCooldown = 0;
+        this.shootCooldownMax = 10; // Frames b/w shots
         this.image = new Image();
         this.image.src = 'assets/player.png';
         this.imageLoaded = false;
@@ -36,6 +41,10 @@ export class Player {
                 case 'd':
                     this.moveRight = true;
                     break;
+                case ' ':
+                    e.preventDefault();
+                    this.shoot();
+                    break;
             }
         });
 
@@ -57,6 +66,15 @@ export class Player {
         });
     }
 
+    shoot() {
+        if (this.shootCooldown <= 0) {
+            const projectileX = this.x + this.width / 2 - 2.5;
+            const projectileY = this.y;
+            this.projectiles.push(new Projectile(projectileX, projectileY));
+            this.shootCooldown = this.shootCooldownMax;
+        }
+    }
+
     update() {
         if (this.moveLeft) {
             this.x -= this.speed;
@@ -75,6 +93,17 @@ export class Player {
         if (this.x + this.width > this.gameWidth) this.x = this.gameWidth - this.width;
         if (this.y < 0) this.y = 0;
         if (this.y + this.height > this.gameHeight) this.y = this.gameHeight - this.height;
+
+        if (this.shootCooldown > 0) {
+            this.shootCooldown--;
+        }
+
+        this.projectiles.forEach((projectile, index) => {
+            projectile.update();
+            if (projectile.isOffscreen(this.gameHeight)) {
+                this.projectiles.splice(index, 1);
+            }
+        });
     }
 
     draw(ctx) {
@@ -84,5 +113,9 @@ export class Player {
             ctx.fillStyle = '#00ff00';
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
+
+        this.projectiles.forEach(projectile => {
+            projectile.draw(ctx);
+        });
     }
 }
