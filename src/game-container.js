@@ -2,12 +2,31 @@ export class GameContainer {
     constructor(canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
-        this.width = 600;
-        this.height = 800;
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        this.containerElement = document.getElementById('gameContainer');
+        
+        this.resizeContainer();
+        
+        window.addEventListener('resize', () => this.resizeContainer());
+        
         this.stars = [];
         this.initStars();
+    }
+
+    resizeContainer() {
+        const availableHeight = window.innerHeight - 4;
+        
+        const width = Math.floor(availableHeight * (4 / 3));
+        
+        this.width = width;
+        this.height = availableHeight;
+        
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        
+        this.containerElement.style.width = this.width + 'px';
+        this.containerElement.style.height = this.height + 'px';
+        
+        this.ctx.imageSmoothingEnabled = false;
     }
 
     initStars() {

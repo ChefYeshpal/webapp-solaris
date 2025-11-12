@@ -11,8 +11,6 @@ body, html {
 }
 
 #gameContainer {
-    width: 600px;
-    height: 800px;
     border: 3px solid gray;
     background-color: #0a0a0a;
     position: relative;
