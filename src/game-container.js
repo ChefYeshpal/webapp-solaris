@@ -43,7 +43,7 @@ export class GameContainer {
     }
 
     update() {
-        // Update star twinkle effect
+        // Twinkle twinkle little star how i wonder how you are
         this.stars.forEach(star => {
             star.opacity += star.twinkleSpeed;
             if (star.opacity >= 0.8 || star.opacity <= 0.3) {
