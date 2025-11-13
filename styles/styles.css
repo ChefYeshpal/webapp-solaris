@@ -125,6 +125,7 @@ body, html {
     line-height: 1.2;
     word-wrap: break-word;
     max-width: 100%;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
 }
 
 #scorePanel .panel-value {

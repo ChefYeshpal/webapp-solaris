@@ -1,14 +1,18 @@
 export class Enemy {
-    constructor(x, y) {
+    constructor(x, y, type = 1) {
         this.x = x;
         this.y = y;
         this.width = 50;
         this.height = 50;
         this.speed = 3;
         this.direction = 1; // 1 for right, -1 for left
+        this.type = type;
         this.image = new Image();
-        this.image.src = 'assets/enemy1.png';
+        this.image.src = `assets/enemy${type}.png`;
         this.imageLoaded = false;
+        
+        this.maxHealth = type === 1 ? 1 : 2;
+        this.health = this.maxHealth;
         
         this.projectiles = [];
         this.shootTimer = 0;
@@ -17,6 +21,11 @@ export class Enemy {
         this.image.onload = () => {
             this.imageLoaded = true;
         };
+    }
+    
+    takeDamage() {
+        this.health--;
+        return this.health <= 0;
     }
 
     update(gameWidth, deltaTime) {
@@ -66,15 +75,36 @@ export class Enemy {
             }
         };
         
-        this.projectiles.push(new EnemyProjectile(this.x + this.width / 2 - 2.5, this.y + this.height));
+        if (this.type === 2) {
+            const spacing = 15; 
+            const centerX = this.x + this.width / 2 - 2.5;
+            this.projectiles.push(new EnemyProjectile(centerX - spacing / 2, this.y + this.height));
+            this.projectiles.push(new EnemyProjectile(centerX + spacing / 2, this.y + this.height));
+        } else {
+            this.projectiles.push(new EnemyProjectile(this.x + this.width / 2 - 2.5, this.y + this.height));
+        }
     }
 
     draw(ctx) {
         if (this.imageLoaded) {
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         } else {
-            ctx.fillStyle = '#ff0000';
+            ctx.fillStyle = this.type === 1 ? '#ff0000' : '#ff00ff';
             ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+        
+        if (this.type === 2 && this.health < this.maxHealth) {
+            const healthBarWidth = 40;
+            const healthBarHeight = 4;
+            const healthBarX = this.x + (this.width - healthBarWidth) / 2;
+            const healthBarY = this.y - 10;
+            
+            ctx.fillStyle = '#333333';
+            ctx.fillRect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+            
+            const currentHealthWidth = (this.health / this.maxHealth) * healthBarWidth;
+            ctx.fillStyle = '#00ff00';
+            ctx.fillRect(healthBarX, healthBarY, currentHealthWidth, healthBarHeight);
         }
         
         this.projectiles.forEach(projectile => {

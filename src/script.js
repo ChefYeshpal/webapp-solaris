@@ -33,18 +33,36 @@ class Game {
         const startY = 50;
 
         let totalEnemies;
+        let enemy2Count = 0;
+        
         if (this.level === 0) {
             totalEnemies = 3;
+            enemy2Count = 0;
         } else if (this.level === 1) {
             totalEnemies = 4;
-        } else {
+            enemy2Count = 0;
+        } else if (this.level === 2) {
             totalEnemies = 7;
+            enemy2Count = 0;
+        } else if (this.level === 3) {
+            totalEnemies = 7;
+            enemy2Count = 2; //30%
+        } else if (this.level === 4) {
+            totalEnemies = 8;
+            enemy2Count = 4; // 50%
+        } else if (this.level === 5) {
+            totalEnemies = 8;
+            enemy2Count = 6; // 75%
+        } else if (this.level >= 6) {
+            // Level 6+: Only enemy2
+            totalEnemies = 8 + Math.floor((this.level - 6) / 2);
+            enemy2Count = totalEnemies; // 100% enemy2
         }
+        
+        let enemy1Count = totalEnemies - enemy2Count;
 
         // Generate symmetrical enemy patterns
-        // Lines: 1-3 (always less than 4)
-        // Enemies per line: distributed to match total count while maintaining symmetry
-        const numLines = Math.floor(Math.random() * 3) + 1; // 1-3 lines
+        const numLines = Math.min(Math.floor(Math.random() * 3) + 1, 3); // 1-3 lines
 
         // Distribute enemies across lines as symmetrically as possible
         const enemiesPerLine = Math.ceil(totalEnemies / numLines);
@@ -66,7 +84,26 @@ class Game {
             // Create enemies symmetrically in THIS, THIS VERY SPECIFIC line
             for (let i = 0; i < numEnemiesInLine; i++) {
                 const enemyX = startX + (i * horizontalSpacing);
-                this.enemies.push(new Enemy(enemyX, lineY));
+                
+                // Determine enemy type
+                let enemyType = 1;
+                if (enemy2Count > 0 && enemy1Count > 0) {
+                    // Mix of both types - randomly distribute
+                    const shouldBeEnemy2 = Math.random() < (enemy2Count / (enemy1Count + enemy2Count));
+                    if (shouldBeEnemy2) {
+                        enemyType = 2;
+                        enemy2Count--;
+                    } else {
+                        enemy1Count--;
+                    }
+                } else if (enemy2Count > 0) {
+                    enemyType = 2;
+                    enemy2Count--;
+                } else {
+                    enemy1Count--;
+                }
+                
+                this.enemies.push(new Enemy(enemyX, lineY, enemyType));
                 enemiesPlaced++;
             }
         }
@@ -151,11 +188,17 @@ class Game {
                 const enemy = this.enemies[j];
                 
                 if (enemy.checkCollision(projectile)) {
-                    // Remove projectile and enemy
+                    // Remove projectile
                     this.player.projectiles.splice(i, 1);
-                    this.enemies.splice(j, 1);
-                    this.score++;
-                    this.updateUI();
+                    
+                    const enemyDestroyed = enemy.takeDamage();
+                    
+                    if (enemyDestroyed) {
+                        this.enemies.splice(j, 1);
+                        this.score += enemy.type;
+                        this.updateUI();
+                    }
+                    
                     break;
                 }
             }
