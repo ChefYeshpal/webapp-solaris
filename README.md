@@ -36,3 +36,7 @@ Just the classic space invader game, why so? because the other option was to mak
     - Added enemy
         - Just `assets/enemy1.png` for now, will add higher ones later on
         - Enemy moves left-right
+- 13 Nov 2025
+    - Fixed issue with mis-match on level numbers
+        - Game showed current level to be +1 than what the start level screen showed
+    - Updated enemy spawning numbers, smol

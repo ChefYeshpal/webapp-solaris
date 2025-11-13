@@ -31,12 +31,12 @@ class Game {
         const startY = 50;
 
         let totalEnemies;
-        if (this.level === 1) {
+        if (this.level === 0) {
             totalEnemies = 3;
-        } else if (this.level === 2) {
-            totalEnemies = 5;
+        } else if (this.level === 1) {
+            totalEnemies = 4;
         } else {
-            totalEnemies = 6;
+            totalEnemies = 7;
         }
 
         // Generate symmetrical enemy patterns
