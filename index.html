@@ -13,6 +13,13 @@
         <div id="mainContainer">
             <div id="gameContainer">
                 <canvas id="gameCanvas"></canvas>
+                <div id="gameOverScreen" class="game-over-hidden">
+                    <div class="game-over-content">
+                        <h1>GAME OVER</h1>
+                        <div class="game-over-level">Level: <span id="gameOverLevel">0</span></div>
+                        <button id="restartBtn" class="restart-button">RESTART?</button>
+                    </div>
+                </div>
             </div>
             <div id="sidePanel">
                 <div id="scorePanel" class="panel-box">

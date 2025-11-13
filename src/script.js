@@ -15,6 +15,7 @@ class Game {
         this.countdownActive = false;
         this.countdownTime = 0;
         this.countdownDuration = 5000;
+        this.isGameOver = false;
         
         // UI Elements
         this.scoreElement = document.getElementById('scoreValue');
@@ -76,6 +77,11 @@ class Game {
     }
 
     gameLoop(timestamp) {
+        if (this.isGameOver) {
+            requestAnimationFrame((time) => this.gameLoop(time));
+            return;
+        }
+        
         const deltaTime = timestamp - this.lastTime;
         this.lastTime = timestamp;
 
@@ -183,8 +189,38 @@ class Game {
     }
     
     gameOver() {
-        console.log('Game Over!');
-        // TODO: Implement game over screen
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const gameOverLevel = document.getElementById('gameOverLevel');
+        const restartBtn = document.getElementById('restartBtn');
+        
+        gameOverLevel.textContent = this.level;
+        gameOverScreen.classList.remove('game-over-hidden');
+        
+        this.isGameOver = true;
+        
+        restartBtn.onclick = () => this.restart();
+    }
+    
+    restart() {
+        this.level = 0;
+        this.score = 0;
+        this.lives = 5;
+        this.enemies = [];
+        this.player.projectiles = [];
+        this.countdownActive = false;
+        this.countdownTime = 0;
+        this.isGameOver = false;
+        
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        gameOverScreen.classList.add('game-over-hidden');
+        
+        this.player.x = this.gameContainer.width / 2 - this.player.width / 2;
+        
+        this.updateUI();
+        
+        this.initEnemies();
+        this.lastTime = 0;
+        this.start();
     }
 
     updateUI() {
