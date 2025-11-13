@@ -11,8 +11,6 @@ export class Player {
         this.speed = 5;
         this.moveLeft = false;
         this.moveRight = false;
-        this.moveUp = false;
-        this.moveDown = false;
         this.projectiles = [];
         this.shootCooldown = 0;
         this.shootCooldownMax = 10; // Frames b/w shots
@@ -29,14 +27,8 @@ export class Player {
     setupInput() {
         window.addEventListener('keydown', (e) => {
             switch(e.key.toLowerCase()) {
-                case 'w':
-                    this.moveUp = true;
-                    break;
                 case 'a':
                     this.moveLeft = true;
-                    break;
-                case 's':
-                    this.moveDown = true;
                     break;
                 case 'd':
                     this.moveRight = true;
@@ -50,14 +42,8 @@ export class Player {
 
         window.addEventListener('keyup', (e) => {
             switch(e.key.toLowerCase()) {
-                case 'w':
-                    this.moveUp = false;
-                    break;
                 case 'a':
                     this.moveLeft = false;
-                    break;
-                case 's':
-                    this.moveDown = false;
                     break;
                 case 'd':
                     this.moveRight = false;
@@ -82,17 +68,9 @@ export class Player {
         if (this.moveRight) {
             this.x += this.speed;
         }
-        if (this.moveUp) {
-            this.y -= this.speed;
-        }
-        if (this.moveDown) {
-            this.y += this.speed;
-        }
 
         if (this.x < 0) this.x = 0;
         if (this.x + this.width > this.gameWidth) this.x = this.gameWidth - this.width;
-        if (this.y < 0) this.y = 0;
-        if (this.y + this.height > this.gameHeight) this.y = this.gameHeight - this.height;
 
         if (this.shootCooldown > 0) {
             this.shootCooldown--;

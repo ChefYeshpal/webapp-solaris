@@ -5,10 +5,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Solaris...</title>
         <link rel="stylesheet" href="styles/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div id="gameContainer">
-            <canvas id="gameCanvas"></canvas>
+        <div id="mainContainer">
+            <div id="gameContainer">
+                <canvas id="gameCanvas"></canvas>
+            </div>
+            <div id="sidePanel">
+                <div id="scorePanel" class="panel-box">
+                    <span id="scoreValue" class="panel-value">00</span>
+                </div>
+                <div id="levelPanel" class="panel-box">
+                    <div class="level-label">LEVEL</div>
+                    <span id="levelValue" class="panel-value">1</span>
+                </div>
+            </div>
         </div>
         <script type="module" src="src/script.js"></script>
     </body>
