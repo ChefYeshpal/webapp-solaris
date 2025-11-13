@@ -11,13 +11,14 @@ class Game {
         this.lastTime = 0;
         this.level = 0;
         this.score = 0;
+        this.lives = 5;
         this.countdownActive = false;
         this.countdownTime = 0;
         this.countdownDuration = 5000;
         
         // UI Elements
         this.scoreElement = document.getElementById('scoreValue');
-        this.levelElement = document.getElementById('levelValue');
+        this.livesElement = document.getElementById('levelValue');
         
         this.initEnemies();
         this.updateUI();
@@ -98,7 +99,7 @@ class Game {
         this.player.update();
     
         this.enemies.forEach(enemy => {
-            enemy.update(this.gameContainer.width);
+            enemy.update(this.gameContainer.width, deltaTime);
         });
 
         this.checkCollisions();
@@ -153,12 +154,43 @@ class Game {
                 }
             }
         }
+        
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+            const enemy = this.enemies[i];
+            for (let j = enemy.projectiles.length - 1; j >= 0; j--) {
+                const projectile = enemy.projectiles[j];
+                
+                if (this.checkPlayerCollision(projectile)) {
+                    enemy.projectiles.splice(j, 1);
+                    this.lives--;
+                    this.updateUI();
+                    
+                    if (this.lives <= 0) {
+                        this.gameOver();
+                    }
+                }
+            }
+        }
+    }
+    
+    checkPlayerCollision(projectile) {
+        return (
+            projectile.x < this.player.x + this.player.width &&
+            projectile.x + projectile.width > this.player.x &&
+            projectile.y < this.player.y + this.player.height &&
+            projectile.y + projectile.height > this.player.y
+        );
+    }
+    
+    gameOver() {
+        console.log('Game Over!');
+        // TODO: Implement game over screen
     }
 
     updateUI() {
         // Format score as 2-digit number with leading zeros
         this.scoreElement.textContent = String(this.score).padStart(2, '0');
-        this.levelElement.textContent = String(this.level);
+        this.livesElement.textContent = String(this.lives);
     }
 }
 
