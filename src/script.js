@@ -9,7 +9,7 @@ class Game {
         this.player = new Player(this.gameContainer.width, this.gameContainer.height);
         this.enemies = [];
         this.lastTime = 0;
-        this.level = 1;
+        this.level = 0;
         this.score = 0;
         this.countdownActive = false;
         this.countdownTime = 0;
@@ -120,19 +120,20 @@ class Game {
     drawCountdown() {
         const remainingSeconds = Math.ceil((this.countdownDuration - this.countdownTime) / 1000);
         const ctx = this.gameContainer.ctx;
+        const nextLevel = this.level + 1;
         
         ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
         ctx.fillRect(0, 0, this.gameContainer.width, this.gameContainer.height);
         
         ctx.fillStyle = '#00ff00';
-        ctx.font = 'bold 60px Arial';
+        ctx.font = 'bold 60px "Press Start 2P"';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(`${remainingSeconds}`, this.gameContainer.width / 2, this.gameContainer.height / 2);
         
         ctx.fillStyle = '#00ff00';
-        ctx.font = '24px Arial';
-        ctx.fillText(`LEVEL ${this.level}`, this.gameContainer.width / 2, this.gameContainer.height / 2 + 80);
+        ctx.font = '24px "Press Start 2P"';
+        ctx.fillText(`LEVEL ${nextLevel}`, this.gameContainer.width / 2, this.gameContainer.height / 2 + 80);
     }
 
     checkCollisions() {

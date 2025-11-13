@@ -16,8 +16,8 @@ Just the classic space invader game, why so? because the other option was to mak
 - [ ] Power ups
     - gonna figure this out later
 - [ ] Stat panel
-    - [ ] Level number
-    - [ ] Info on points
+    - [x] Level number
+    - [x] Info on points
     - [ ] Cooldown for powerups
 
 ## Devlogs
