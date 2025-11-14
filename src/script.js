@@ -394,7 +394,18 @@ class Game {
                 for (let j = this.enemies.length - 1; j >= 0; j--) {
                     const enemy = this.enemies[j];
                     
-                    if (enemy.type !== 4 && this.checkLazerCollision(projectile, enemy)) {
+                    if (enemy.type === 4) {
+                        const isHitting = this.checkLazerCollision(projectile, enemy);
+                        enemy.updateLazerTimer(16, isHitting); // 16ms per frame
+                        
+                        const enemyDestroyed = enemy.checkLazerDamageThreshold();
+                        if (enemyDestroyed) {
+                            this.enemyProjectiles.push(...enemy.projectiles);
+                            this.enemies.splice(j, 1);
+                            this.score += enemy.type;
+                            this.updateUI();
+                        }
+                    } else if (this.checkLazerCollision(projectile, enemy)) {
                         const enemyDestroyed = enemy.takeDamage();
                         
                         if (enemyDestroyed) {
