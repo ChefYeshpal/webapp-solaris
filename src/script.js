@@ -314,8 +314,7 @@ class Game {
         this.updateUI();
         
         this.initEnemies();
-        this.lastTime = 0;
-        this.start();
+        this.lastTime = performance.now();
     }
 
     updateUI() {
