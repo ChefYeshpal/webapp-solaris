@@ -16,9 +16,13 @@ Just the classic space invader game, why so? because the other option was to mak
 - [ ] Power ups
     - gonna figure this out later
 - [ ] Stat panel
-    - [x] Level number
+    - [x] Lives left (Starts with 5)
     - [x] Info on points
     - [ ] Cooldown for powerups
+- [ ] Game over screen
+    - [x] Restart button
+    - [ ] Funy response heh
+    - [ ] Rick...
 
 ## Devlogs
 - 11 Nov 2025
@@ -40,3 +44,13 @@ Just the classic space invader game, why so? because the other option was to mak
     - Fixed issue with mis-match on level numbers
         - Game showed current level to be +1 than what the start level screen showed
     - Updated enemy spawning numbers, smol
+    - Added enemy 2
+        - Shoots 2 projecties a few thingues apart
+        - Needs 3 shots to kill
+    - Added game over screen
+        - Gotta add a funy responses heh
+- 14 Nov 2025
+    - Added enemy 3
+        - Chonky boi
+        - Needs 5 shots to kill
+        - Shoots 3x2 projectiles
