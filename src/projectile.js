@@ -49,22 +49,19 @@ export class Projectile {
 
     explode() {
         this.hasExploded = true;
-        const directions = [
-            { x: 0, y: -1 },
-            { x: 0, y: 1 },
-            { x: -1, y: 0 },
-            { x: 1, y: 0 }
-        ];
+        const pelletCount = 18;
+        const angleStep = (Math.PI * 2) / pelletCount;
         
-        directions.forEach(dir => {
-            for (let i = 0; i < 3; i++) {
-                const angle = Math.atan2(dir.y, dir.x) + (i - 1) * 0.2;
-                const pelletX = this.x + Math.cos(angle) * 15;
-                const pelletY = this.y + Math.sin(angle) * 15;
-                
-                this.pellets.push(new Pellet(pelletX, pelletY, Math.cos(angle) * 8, Math.sin(angle) * 8));
-            }
-        });
+        for (let i = 0; i < pelletCount; i++) {
+            const angle = i * angleStep;
+            const speed = 8;
+            const vx = Math.cos(angle) * speed;
+            const vy = Math.sin(angle) * speed;
+            const pelletX = this.x + Math.cos(angle) * 15;
+            const pelletY = this.y + Math.sin(angle) * 15;
+            
+            this.pellets.push(new Pellet(pelletX, pelletY, vx, vy));
+        }
     }
 
     draw(ctx) {

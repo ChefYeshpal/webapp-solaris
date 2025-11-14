@@ -164,44 +164,59 @@ class Game {
         let totalEnemies;
         let enemy2Count = 0;
         let enemy3Count = 0;
+        let enemy4Count = 0;
         
         if (this.level === 0) {
             totalEnemies = 3;
             enemy2Count = 0;
             enemy3Count = 0;
+            enemy4Count = 0;
         } else if (this.level === 1) {
             totalEnemies = 4;
             enemy2Count = 0;
             enemy3Count = 0;
+            enemy4Count = 0;
         } else if (this.level === 2) {
             totalEnemies = 7;
             enemy2Count = 0;
             enemy3Count = 0;
+            enemy4Count = 0;
         } else if (this.level === 3) {
             totalEnemies = 7;
             enemy2Count = 2; //30%
             enemy3Count = 0;
+            enemy4Count = 0;
         } else if (this.level === 4) {
             totalEnemies = 8;
             enemy2Count = 4; // 50%
             enemy3Count = 0;
+            enemy4Count = 0;
         } else if (this.level === 5) {
             totalEnemies = 8;
             enemy2Count = 6; // 75%
             enemy3Count = 0;
+            enemy4Count = 0;
         } else if (this.level >= 6 && this.level < 10) {
             // Level 6-9: Only enemy2
             totalEnemies = 8 + Math.floor((this.level - 6) / 2);
             enemy2Count = totalEnemies; // 100% enemy2
             enemy3Count = 0;
-        } else if (this.level >= 10) {
-            // Level 10+: Mix of enemy2 and enemy3
+            enemy4Count = 0;
+        } else if (this.level >= 10 && this.level < 20) {
+            // Level 10-19: Mix of enemy2 and enemy3
             totalEnemies = 10 + Math.floor((this.level - 10) / 2);
             enemy2Count = Math.floor(totalEnemies / 2);
             enemy3Count = totalEnemies - enemy2Count; // 50/50 split
+            enemy4Count = 0;
+        } else if (this.level >= 20) {
+            // Level 20+: Mix of enemy2, enemy3, and enemy4
+            totalEnemies = 11 + Math.floor((this.level - 20) / 2);
+            enemy2Count = Math.floor(totalEnemies / 3);
+            enemy3Count = Math.floor(totalEnemies / 3);
+            enemy4Count = Math.min(3, totalEnemies - enemy2Count - enemy3Count);
         }
         
-        let enemy1Count = totalEnemies - enemy2Count - enemy3Count;
+        let enemy1Count = totalEnemies - enemy2Count - enemy3Count - enemy4Count;
 
         // Generate symmetrical enemy patterns
         const numLines = Math.min(Math.floor(Math.random() * 3) + 1, 3); // 1-3 lines
@@ -229,12 +244,13 @@ class Game {
                 
                 // Determine enemy type
                 let enemyType = 1;
-                const totalOtherEnemies = enemy1Count + enemy2Count + enemy3Count;
+                const totalOtherEnemies = enemy1Count + enemy2Count + enemy3Count + enemy4Count;
                 
                 if (totalOtherEnemies > 0) {
                     const rand = Math.random();
                     const enemy1Chance = enemy1Count / totalOtherEnemies;
                     const enemy2Chance = enemy2Count / totalOtherEnemies;
+                    const enemy3Chance = enemy3Count / totalOtherEnemies;
                     
                     if (rand < enemy1Chance) {
                         enemyType = 1;
@@ -242,9 +258,12 @@ class Game {
                     } else if (rand < enemy1Chance + enemy2Chance) {
                         enemyType = 2;
                         enemy2Count--;
-                    } else {
+                    } else if (rand < enemy1Chance + enemy2Chance + enemy3Chance) {
                         enemyType = 3;
                         enemy3Count--;
+                    } else {
+                        enemyType = 4;
+                        enemy4Count--;
                     }
                 }
                 
@@ -375,7 +394,7 @@ class Game {
                 for (let j = this.enemies.length - 1; j >= 0; j--) {
                     const enemy = this.enemies[j];
                     
-                    if (this.checkLazerCollision(projectile, enemy)) {
+                    if (enemy.type !== 4 && this.checkLazerCollision(projectile, enemy)) {
                         const enemyDestroyed = enemy.takeDamage();
                         
                         if (enemyDestroyed) {
@@ -394,7 +413,12 @@ class Game {
                         const enemy = this.enemies[k];
                         
                         if (this.checkPelletCollision(pellet, enemy)) {
-                            const enemyDestroyed = enemy.takeDamage();
+                            let enemyDestroyed;
+                            if (enemy.type === 4) {
+                                enemyDestroyed = enemy.takePelletDamage();
+                            } else {
+                                enemyDestroyed = enemy.takePelletDamage();
+                            }
                             
                             if (enemyDestroyed) {
                                 this.enemyProjectiles.push(...enemy.projectiles);
@@ -417,7 +441,7 @@ class Game {
                 for (let j = this.enemies.length - 1; j >= 0; j--) {
                     const enemy = this.enemies[j];
                     
-                    if (enemy.checkCollision(projectile)) {
+                    if (enemy.type !== 4 && enemy.checkCollision(projectile)) {
                         this.player.projectiles.splice(i, 1);
                         
                         const enemyDestroyed = enemy.takeDamage();
@@ -437,6 +461,18 @@ class Game {
         
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i];
+            
+            if (enemy.type === 4 && enemy.lazerBeam) {
+                if (enemy.checkLazerCollision(this.player.x, this.player.width, this.player.y, this.player.height)) {
+                    this.lives--;
+                    this.updateUI();
+                    
+                    if (this.lives <= 0) {
+                        this.gameOver();
+                    }
+                }
+            }
+            
             for (let j = enemy.projectiles.length - 1; j >= 0; j--) {
                 const projectile = enemy.projectiles[j];
                 
