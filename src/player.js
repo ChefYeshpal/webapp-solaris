@@ -14,6 +14,7 @@ export class Player {
         this.projectiles = [];
         this.shootCooldown = 0;
         this.shootCooldownMax = 10; // Frames b/w shots
+        this.currentWeapon = 'projectile';
         this.image = new Image();
         this.image.src = 'assets/player.png';
         this.imageLoaded = false;
@@ -37,6 +38,15 @@ export class Player {
                     e.preventDefault();
                     this.shoot();
                     break;
+                case '1':
+                    this.switchWeapon('projectile');
+                    break;
+                case '2':
+                    this.switchWeapon('lazer');
+                    break;
+                case '3':
+                    this.switchWeapon('bomb');
+                    break;
             }
         });
 
@@ -50,6 +60,11 @@ export class Player {
                     break;
             }
         });
+    }
+
+    switchWeapon(weaponType) {
+        const event = new CustomEvent('weaponSwitch', { detail: { weaponType } });
+        window.dispatchEvent(event);
     }
 
     shoot() {

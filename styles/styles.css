@@ -149,6 +149,24 @@ body, html {
     border-left: 5px solid #00ff00;
 }
 
+.weapon-box.locked {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.weapon-box.locked:hover {
+    background-color: #0a0a0a;
+}
+
+.weapon-box.locked .weapon-label {
+    color: #555555;
+    text-shadow: none;
+}
+
+.weapon-box.locked .weapon-icon {
+    filter: grayscale(100%) brightness(0.4);
+}
+
 .weapon-label {
     font-size: 12px;
     color: #00ff00;

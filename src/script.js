@@ -19,13 +19,121 @@ class Game {
         this.countdownDuration = 5000;
         this.isGameOver = false;
         
+        // Weapon unlocking system
+        this.unlockedWeapons = {
+            projectile: true,
+            lazer: false,
+            bomb: false
+        };
+        
+        this.secretKeyPresses = [];
+        this.secretKeyTimeout = null;
+        
         // UI Elements
         this.scoreElement = document.getElementById('scoreValue');
         this.livesElement = document.getElementById('levelValue');
+        this.weaponBoxes = {
+            projectile: document.getElementById('projectileWeapon'),
+            lazer: document.getElementById('lazerWeapon'),
+            bomb: document.getElementById('bombWeapon')
+        };
         
+        this.setupWeaponUI();
         this.initEnemies();
         this.updateUI();
         this.start();
+    }
+
+    setupWeaponUI() {
+        Object.keys(this.weaponBoxes).forEach(weaponType => {
+            this.weaponBoxes[weaponType].addEventListener('click', () => {
+                this.handleWeaponClick(weaponType);
+            });
+        });
+        
+        window.addEventListener('weaponSwitch', (e) => {
+            this.handleWeaponSwitch(e.detail.weaponType);
+        });
+        
+        // Secret code listener
+        window.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'g') {
+                this.handleSecretKeyPress();
+            }
+        });
+        
+        this.updateWeaponUI();
+    }
+
+    handleSecretKeyPress() {
+        if (this.secretKeyTimeout) {
+            clearTimeout(this.secretKeyTimeout);
+        }
+        
+        this.secretKeyPresses.push(Date.now());
+        
+        if (this.secretKeyPresses.length > 7) {
+            this.secretKeyPresses.shift();
+        }
+        
+        if (this.secretKeyPresses.length === 7) {
+            const firstPress = this.secretKeyPresses[0];
+            const lastPress = this.secretKeyPresses[6];
+            
+            if (lastPress - firstPress < 2000) {
+                this.unlockAllWeapons();
+            }
+        }
+        
+        this.secretKeyTimeout = setTimeout(() => {
+            this.secretKeyPresses = [];
+        }, 2000);
+    }
+
+    unlockAllWeapons() {
+        this.unlockedWeapons.projectile = true;
+        this.unlockedWeapons.lazer = true;
+        this.unlockedWeapons.bomb = true;
+        this.updateWeaponUI();
+        this.secretKeyPresses = [];
+    }
+
+    handleWeaponClick(weaponType) {
+        if (this.unlockedWeapons[weaponType]) {
+            this.player.currentWeapon = weaponType;
+            this.updateWeaponUI();
+        }
+    }
+
+    handleWeaponSwitch(weaponType) {
+        if (this.unlockedWeapons[weaponType]) {
+            this.player.currentWeapon = weaponType;
+            this.updateWeaponUI();
+        }
+    }
+
+    updateWeaponUI() {
+        Object.keys(this.weaponBoxes).forEach(weaponType => {
+            const box = this.weaponBoxes[weaponType];
+            
+            box.classList.remove('active', 'locked');
+            
+            if (!this.unlockedWeapons[weaponType]) {
+                box.classList.add('locked');
+            }
+            
+            // Add active class if current weapon
+            if (this.player.currentWeapon === weaponType) {
+                box.classList.add('active');
+            }
+        });
+    }
+
+    checkWeaponUnlocks() {
+        if (this.level >= 12 && !this.unlockedWeapons.lazer) {
+            this.unlockedWeapons.lazer = true;
+            this.updateWeaponUI();
+        }
     }
 
     initEnemies() {
@@ -151,6 +259,7 @@ class Game {
                 this.level++;
                 this.countdownActive = false;
                 this.countdownTime = 0;
+                this.checkWeaponUnlocks();
                 this.updateUI();
                 this.initEnemies();
             }
@@ -306,12 +415,20 @@ class Game {
         this.countdownTime = 0;
         this.isGameOver = false;
         
+        this.unlockedWeapons = {
+            projectile: true,
+            lazer: false,
+            bomb: false
+        };
+        this.player.currentWeapon = 'projectile';
+        
         const gameOverScreen = document.getElementById('gameOverScreen');
         gameOverScreen.classList.add('game-over-hidden');
         
         this.player.x = this.gameContainer.width / 2 - this.player.width / 2;
         
         this.updateUI();
+        this.updateWeaponUI();
         
         this.initEnemies();
         this.lastTime = performance.now();
@@ -321,8 +438,25 @@ class Game {
         this.scoreElement.textContent = String(this.score).padStart(2, '0');
         this.livesElement.textContent = String(this.lives);
     }
+
+    // Ah these test functions... ofc I wont ever work in js and NOT have one...
+    skipToLevel(targetLevel) {
+        this.level = targetLevel;
+        this.enemies = [];
+        this.enemyProjectiles = [];
+        this.countdownActive = false;
+        this.countdownTime = 0;
+        this.checkWeaponUnlocks();
+        this.updateUI();
+        this.updateWeaponUI();
+        this.initEnemies();
+        console.log(`Skipped to level ${targetLevel}`);
+    }
 }
 
 window.addEventListener('load', () => {
-    new Game();
+    const game = new Game();
+    // Expose game instance to console for testing
+    window.game = game;
+    console.log('Game loaded! Use window.game.skipToLevel(14) to skip to level 14');
 });
