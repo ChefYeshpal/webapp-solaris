@@ -154,6 +154,7 @@ body, html {
     color: #00ff00;
     margin-bottom: 15px;
     letter-spacing: 2px;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
 }
 
 .weapon-icon {
@@ -181,23 +182,15 @@ body, html {
 }
 
 .bomb-icon {
-    width: 40px;
-    height: 40px;
-    background: radial-gradient(circle, #888888 0%, #555555 70%, #333333 100%);
-    border-radius: 50%;
-    position: relative;
-    box-shadow: 0 0 20px rgba(100, 100, 100, 0.6);
-}
-
-.bomb-icon::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 3px;
-    height: 8px;
-    background-color: #666;
+    width: 35px;
+    height: 35px;
+    background-color: #333333;
+    box-shadow: 
+        inset 0 0 0 3px #666666,
+        inset 0 0 0 6px #888888,
+        inset 0 0 0 9px #aaaaaa,
+        0 0 10px rgba(100, 100, 100, 0.4);
+    image-rendering: pixelated;
 }
 
 
