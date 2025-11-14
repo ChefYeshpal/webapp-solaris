@@ -149,6 +149,10 @@ class Game {
             this.unlockedWeapons.lazer = true;
             this.updateWeaponUI();
         }
+        if (this.level >= 20 && !this.unlockedWeapons.bomb) {
+            this.unlockedWeapons.bomb = true;
+            this.updateWeaponUI();
+        }
     }
 
     initEnemies() {
@@ -312,6 +316,18 @@ class Game {
         }
 
         this.checkCollisions();
+        
+        for (let i = this.player.projectiles.length - 1; i >= 0; i--) {
+            const projectile = this.player.projectiles[i];
+            if (projectile.isBomb && !projectile.hasCost) {
+                projectile.hasCost = true;
+                this.score -= 30;
+                if (this.score < 0) {
+                    this.score = 0;
+                }
+                this.updateUI();
+            }
+        }
 
         this.gameContainer.draw();
         this.player.draw(this.gameContainer.ctx);
@@ -370,6 +386,33 @@ class Game {
                         }
                     }
                 }
+            } else if (projectile.isBomb) {
+                for (let j = projectile.pellets.length - 1; j >= 0; j--) {
+                    const pellet = projectile.pellets[j];
+                    
+                    for (let k = this.enemies.length - 1; k >= 0; k--) {
+                        const enemy = this.enemies[k];
+                        
+                        if (this.checkPelletCollision(pellet, enemy)) {
+                            const enemyDestroyed = enemy.takeDamage();
+                            
+                            if (enemyDestroyed) {
+                                this.enemyProjectiles.push(...enemy.projectiles);
+                                this.enemies.splice(k, 1);
+                                this.score += enemy.type;
+                                this.updateUI();
+                            }
+                        }
+                    }
+                    
+                    if (!pellet.isAlive()) {
+                        projectile.pellets.splice(j, 1);
+                    }
+                }
+                
+                if (projectile.hasExploded && projectile.pellets.length === 0) {
+                    this.player.projectiles.splice(i, 1);
+                }
             } else {
                 for (let j = this.enemies.length - 1; j >= 0; j--) {
                     const enemy = this.enemies[j];
@@ -422,6 +465,26 @@ class Game {
                 }
             }
         }
+        
+        for (let i = this.player.projectiles.length - 1; i >= 0; i--) {
+            const projectile = this.player.projectiles[i];
+            
+            if (projectile.isBomb && projectile.hasExploded) {
+                for (let j = projectile.pellets.length - 1; j >= 0; j--) {
+                    const pellet = projectile.pellets[j];
+                    
+                    if (this.checkPelletPlayerCollision(pellet)) {
+                        projectile.pellets.splice(j, 1);
+                        this.lives--;
+                        this.updateUI();
+                        
+                        if (this.lives <= 0) {
+                            this.gameOver();
+                        }
+                    }
+                }
+            }
+        }
     }
     
     checkPlayerCollision(projectile) {
@@ -430,6 +493,24 @@ class Game {
             projectile.x + projectile.width > this.player.x &&
             projectile.y < this.player.y + this.player.height &&
             projectile.y + projectile.height > this.player.y
+        );
+    }
+    
+    checkPelletCollision(pellet, enemy) {
+        return (
+            pellet.x - pellet.width / 2 < enemy.x + enemy.width &&
+            pellet.x + pellet.width / 2 > enemy.x &&
+            pellet.y - pellet.height / 2 < enemy.y + enemy.height &&
+            pellet.y + pellet.height / 2 > enemy.y
+        );
+    }
+    
+    checkPelletPlayerCollision(pellet) {
+        return (
+            pellet.x - pellet.width / 2 < this.player.x + this.player.width &&
+            pellet.x + pellet.width / 2 > this.player.x &&
+            pellet.y - pellet.height / 2 < this.player.y + this.player.height &&
+            pellet.y + pellet.height / 2 > this.player.y
         );
     }
     

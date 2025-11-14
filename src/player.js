@@ -118,7 +118,11 @@ export class Player {
         if (this.shootCooldown <= 0) {
             const projectileX = this.x + this.width / 2 - 2.5;
             const projectileY = this.y;
-            this.projectiles.push(new Projectile(projectileX, projectileY));
+            if (this.currentWeapon === 'bomb') {
+                this.projectiles.push(new Projectile(projectileX, projectileY, 'bomb'));
+            } else {
+                this.projectiles.push(new Projectile(projectileX, projectileY));
+            }
             this.shootCooldown = this.shootCooldownMax;
         }
     }
