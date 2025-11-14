@@ -16,7 +16,7 @@ export class Projectile {
             this.isLazer = false;
             this.isBomb = true;
             this.timeAlive = 0;
-            this.explosionDelay = 2000;
+            this.explosionDelay = 3000;
             this.hasExploded = false;
             this.pellets = [];
         } else {
