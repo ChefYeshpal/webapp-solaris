@@ -17,6 +17,8 @@ export class Enemy {
         this.projectiles = [];
         this.shootTimer = 0;
         this.shootInterval = (Math.random() * 2000) + 2000;
+        this.enemy3SecondShotTimer = 0;
+        this.enemy3SecondShotDelay = 150; 
         
         this.image.onload = () => {
             this.imageLoaded = true;
@@ -40,6 +42,15 @@ export class Enemy {
             this.shoot();
             this.shootTimer = 0;
             this.shootInterval = (Math.random() * 2000) + 2000;
+        }
+        
+        // enemy3 second shot delay
+        if (this.type === 3 && this.enemy3SecondShotTimer > 0) {
+            this.enemy3SecondShotTimer -= deltaTime;
+            if (this.enemy3SecondShotTimer <= 0) {
+                this.shootSecondRow();
+                this.enemy3SecondShotTimer = 0;
+            }
         }
         
         // Update projectiles
@@ -86,9 +97,41 @@ export class Enemy {
             this.projectiles.push(new EnemyProjectile(centerX - spacing, this.y + this.height));
             this.projectiles.push(new EnemyProjectile(centerX, this.y + this.height));
             this.projectiles.push(new EnemyProjectile(centerX + spacing, this.y + this.height));
+            this.enemy3SecondShotTimer = this.enemy3SecondShotDelay;
         } else {
             this.projectiles.push(new EnemyProjectile(this.x + this.width / 2 - 2.5, this.y + this.height));
         }
+    }
+    
+    shootSecondRow() {
+        const EnemyProjectile = class {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 5;
+                this.height = 12;
+                this.speed = 7;
+            }
+            
+            update() {
+                this.y += this.speed;
+            }
+            
+            draw(ctx) {
+                ctx.fillStyle = '#ff6600';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+            
+            isOffscreen(gameHeight) {
+                return this.y - this.height > gameHeight;
+            }
+        };
+        
+        const spacing = 20;
+        const centerX = this.x + this.width / 2 - 2.5;
+        this.projectiles.push(new EnemyProjectile(centerX - spacing, this.y + this.height));
+        this.projectiles.push(new EnemyProjectile(centerX, this.y + this.height));
+        this.projectiles.push(new EnemyProjectile(centerX + spacing, this.y + this.height));
     }
 
     draw(ctx) {
