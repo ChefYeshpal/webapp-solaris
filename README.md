@@ -58,3 +58,6 @@ Just the classic space invader game, why so? because the other option was to mak
         - Chonky boi
         - Needs 5 shots to kill
         - Shoots 3x2 projectiles
+    - Added left panel
+        - Has different projectiles
+    - Added game over responses
