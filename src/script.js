@@ -55,6 +55,10 @@ class Game {
             this.handleWeaponSwitch(e.detail.weaponType);
         });
         
+        window.addEventListener('startLazer', () => {
+            this.handleLazerStart();
+        });
+        
         // Secret code listener
         window.addEventListener('keydown', (e) => {
             if (e.key.toLowerCase() === 'g') {
@@ -94,7 +98,9 @@ class Game {
         this.unlockedWeapons.projectile = true;
         this.unlockedWeapons.lazer = true;
         this.unlockedWeapons.bomb = true;
+        this.score += 1000;
         this.updateWeaponUI();
+        this.updateUI();
         this.secretKeyPresses = [];
     }
 
@@ -107,8 +113,17 @@ class Game {
 
     handleWeaponSwitch(weaponType) {
         if (this.unlockedWeapons[weaponType]) {
+            if (this.player.currentWeapon === 'lazer' && weaponType !== 'lazer') {
+                this.player.stopLazer();
+            }
             this.player.currentWeapon = weaponType;
             this.updateWeaponUI();
+        }
+    }
+
+    handleLazerStart() {
+        if (this.score >= 20) {
+            this.player.activateLazer();
         }
     }
 
@@ -267,6 +282,22 @@ class Game {
 
         this.gameContainer.update();
         this.player.update();
+        
+    
+        if (this.player.isShootingLazer) {
+            const duration = this.player.lazerDuration / 60;
+            const baseCost = 20 / 60;
+            const multiplier = 1 + (duration * duration) * 0.5;
+            const pointsPerFrame = baseCost * multiplier;
+            this.score -= pointsPerFrame;
+            
+            if (this.score <= 0) {
+                this.score = 0;
+                this.player.stopLazer();
+            }
+            
+            this.updateUI();
+        }
     
         this.enemies.forEach(enemy => {
             enemy.update(this.gameContainer.width, deltaTime);
@@ -324,24 +355,39 @@ class Game {
         for (let i = this.player.projectiles.length - 1; i >= 0; i--) {
             const projectile = this.player.projectiles[i];
             
-            for (let j = this.enemies.length - 1; j >= 0; j--) {
-                const enemy = this.enemies[j];
-                
-                if (enemy.checkCollision(projectile)) {
-                    // Remove projectile
-                    this.player.projectiles.splice(i, 1);
+            if (projectile.isLazer) {
+                for (let j = this.enemies.length - 1; j >= 0; j--) {
+                    const enemy = this.enemies[j];
                     
-                    const enemyDestroyed = enemy.takeDamage();
-                    
-                    if (enemyDestroyed) {
-                        // Transfer enemy projectiles to orphaned list
-                        this.enemyProjectiles.push(...enemy.projectiles);
-                        this.enemies.splice(j, 1);
-                        this.score += enemy.type;
-                        this.updateUI();
+                    if (this.checkLazerCollision(projectile, enemy)) {
+                        const enemyDestroyed = enemy.takeDamage();
+                        
+                        if (enemyDestroyed) {
+                            this.enemyProjectiles.push(...enemy.projectiles);
+                            this.enemies.splice(j, 1);
+                            this.score += enemy.type;
+                            this.updateUI();
+                        }
                     }
+                }
+            } else {
+                for (let j = this.enemies.length - 1; j >= 0; j--) {
+                    const enemy = this.enemies[j];
                     
-                    break;
+                    if (enemy.checkCollision(projectile)) {
+                        this.player.projectiles.splice(i, 1);
+                        
+                        const enemyDestroyed = enemy.takeDamage();
+                        
+                        if (enemyDestroyed) {
+                            this.enemyProjectiles.push(...enemy.projectiles);
+                            this.enemies.splice(j, 1);
+                            this.score += enemy.type;
+                            this.updateUI();
+                        }
+                        
+                        break;
+                    }
                 }
             }
         }
@@ -387,6 +433,19 @@ class Game {
         );
     }
     
+    checkLazerCollision(lazer, enemy) {
+        const lazerLeft = lazer.x - lazer.width / 2;
+        const lazerRight = lazer.x + lazer.width / 2;
+        const enemyLeft = enemy.x;
+        const enemyRight = enemy.x + enemy.width;
+        
+        return (
+            lazerRight > enemyLeft &&
+            lazerLeft < enemyRight &&
+            enemy.y < lazer.y
+        );
+    }
+    
     gameOver() {
         const gameOverScreen = document.getElementById('gameOverScreen');
         const gameOverLevel = document.getElementById('gameOverLevel');
@@ -411,6 +470,7 @@ class Game {
         this.enemies = [];
         this.enemyProjectiles = [];
         this.player.projectiles = [];
+        this.player.stopLazer();
         this.countdownActive = false;
         this.countdownTime = 0;
         this.isGameOver = false;
@@ -421,6 +481,7 @@ class Game {
             bomb: false
         };
         this.player.currentWeapon = 'projectile';
+        this.player.lazerDuration = 0;
         
         const gameOverScreen = document.getElementById('gameOverScreen');
         gameOverScreen.classList.add('game-over-hidden');
@@ -435,7 +496,7 @@ class Game {
     }
 
     updateUI() {
-        this.scoreElement.textContent = String(this.score).padStart(2, '0');
+        this.scoreElement.textContent = String(Math.floor(this.score)).padStart(2, '0');
         this.livesElement.textContent = String(this.lives);
     }
 
@@ -458,5 +519,5 @@ window.addEventListener('load', () => {
     const game = new Game();
     // Expose game instance to console for testing
     window.game = game;
-    console.log('Game loaded! Use window.game.skipToLevel(14) to skip to level 14');
+    console.log('Game loaded, Use window.game.skipToLevel() to skip to specified');
 });

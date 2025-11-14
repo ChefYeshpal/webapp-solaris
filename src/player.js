@@ -15,6 +15,9 @@ export class Player {
         this.shootCooldown = 0;
         this.shootCooldownMax = 10; // Frames b/w shots
         this.currentWeapon = 'projectile';
+        this.isShootingLazer = false;
+        this.lazerBeam = null;
+        this.lazerDuration = 0;
         this.image = new Image();
         this.image.src = 'assets/player.png';
         this.imageLoaded = false;
@@ -36,7 +39,11 @@ export class Player {
                     break;
                 case ' ':
                     e.preventDefault();
-                    this.shoot();
+                    if (this.currentWeapon === 'lazer') {
+                        this.startLazer();
+                    } else {
+                        this.shoot();
+                    }
                     break;
                 case '1':
                     this.switchWeapon('projectile');
@@ -58,6 +65,11 @@ export class Player {
                 case 'd':
                     this.moveRight = false;
                     break;
+                case ' ':
+                    if (this.currentWeapon === 'lazer') {
+                        this.stopLazer();
+                    }
+                    break;
             }
         });
     }
@@ -65,6 +77,41 @@ export class Player {
     switchWeapon(weaponType) {
         const event = new CustomEvent('weaponSwitch', { detail: { weaponType } });
         window.dispatchEvent(event);
+    }
+
+    startLazer() {
+        const event = new CustomEvent('startLazer');
+        window.dispatchEvent(event);
+    }
+
+    stopLazer() {
+        this.isShootingLazer = false;
+        this.lazerDuration = 0;
+        if (this.lazerBeam) {
+            const index = this.projectiles.indexOf(this.lazerBeam);
+            if (index > -1) {
+                this.projectiles.splice(index, 1);
+            }
+            this.lazerBeam = null;
+        }
+    }
+
+    activateLazer() {
+        if (!this.isShootingLazer) {
+            this.isShootingLazer = true;
+            this.lazerDuration = 0;
+            const lazerX = this.x + this.width / 2;
+            const lazerY = this.y;
+            this.lazerBeam = new Projectile(lazerX, lazerY, 'lazer');
+            this.projectiles.push(this.lazerBeam);
+        }
+    }
+
+    updateLazerPosition() {
+        if (this.isShootingLazer && this.lazerBeam) {
+            this.lazerBeam.x = this.x + this.width / 2;
+            this.lazerBeam.y = this.y;
+        }
     }
 
     shoot() {
@@ -90,6 +137,12 @@ export class Player {
         if (this.shootCooldown > 0) {
             this.shootCooldown--;
         }
+
+        if (this.isShootingLazer) {
+            this.lazerDuration += 1;
+        }
+
+        this.updateLazerPosition();
 
         this.projectiles.forEach((projectile, index) => {
             projectile.update();
