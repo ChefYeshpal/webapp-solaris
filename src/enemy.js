@@ -1,10 +1,16 @@
 export class Enemy {
-    constructor(x, y, type = 1) {
+    constructor(x, y, type = 1, level = 0) {
         this.x = x;
         this.y = y;
         this.width = 50;
         this.height = 50;
-        this.speed = 3;
+        this.level = level;
+        
+        // Increase speed after level 15
+        const baseSpeed = 3;
+        const speedBonus = level > 15 ? (level - 15) * 0.3 : 0;
+        this.speed = baseSpeed + speedBonus;
+        
         this.direction = 1; // 1 for right, -1 for left
         this.type = type;
         this.image = new Image();
@@ -16,7 +22,10 @@ export class Enemy {
         
         this.projectiles = [];
         this.shootTimer = 0;
-        this.shootInterval = (Math.random() * 2000) + 2000;
+        const baseInterval = (Math.random() * 2000) + 2000;
+        const intervalReduction = level > 15 ? (level - 15) * 100 : 0;
+        this.shootInterval = Math.max(1000, baseInterval - intervalReduction);
+        
         this.enemy3SecondShotTimer = 0;
         this.enemy3SecondShotDelay = 150; 
         
@@ -41,7 +50,9 @@ export class Enemy {
         if (this.shootTimer >= this.shootInterval) {
             this.shoot();
             this.shootTimer = 0;
-            this.shootInterval = (Math.random() * 2000) + 2000;
+            const baseInterval = (Math.random() * 2000) + 2000;
+            const intervalReduction = this.level > 15 ? (this.level - 15) * 100 : 0;
+            this.shootInterval = Math.max(1000, baseInterval - intervalReduction);
         }
         
         // enemy3 second shot delay

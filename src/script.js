@@ -120,7 +120,7 @@ class Game {
                     }
                 }
                 
-                this.enemies.push(new Enemy(enemyX, lineY, enemyType));
+                this.enemies.push(new Enemy(enemyX, lineY, enemyType, this.level));
                 enemiesPlaced++;
             }
         }
