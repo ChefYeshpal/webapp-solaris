@@ -6,27 +6,26 @@ Just the classic space invader game, why so? because the other option was to mak
     - By yours truly
     
 ## Here's a list...
-- [ ] Game window
+- [x] Game window
     - [x] 4:3 aspect ratio
-    - [ ] Slight flickers
 - [x] Player
     - [x] Movable with `wasd`
     - [x] Fire with `space`
-- [ ] Enemys
+- [x] Enemys
     - [x] Smol guys, kill with 1 shot
-    - [ ] Mid guys, kill with 2 shots
-    - [ ] High guys, kill with 4 shots
-    - [ ] Have a random generation pattern for infinite levels
-- [ ] Power ups
-    - gonna figure this out later
+    - [x] Mid guys, kill with 2 shots
+    - [x] High guys, kill with 5 shots
+    - [x] Have a random generation pattern for infinite levels
+- [ ] Projectiles panel
+    - [x] Normal projectiles
+    - [x] Lazers
+    - [ ] Bomb
 - [ ] Stat panel
     - [x] Lives left (Starts with 5)
     - [x] Info on points
-    - [ ] Cooldown for powerups
-- [ ] Game over screen
+- [x] Game over screen
     - [x] Restart button
-    - [ ] Funy response heh
-    - [ ] Rick...
+    - [x] Funy response heh
 
 ## Devlogs
 - 11 Nov 2025
@@ -61,3 +60,5 @@ Just the classic space invader game, why so? because the other option was to mak
     - Added left panel
         - Has different projectiles
     - Added game over responses
+    - Added lazer
+        - 20 points/sec

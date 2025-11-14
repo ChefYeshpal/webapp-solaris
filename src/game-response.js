@@ -2,7 +2,7 @@ export const gameResponses = {
     early: [
         'lol noob',
         'skill issue',
-        'get good',
+        'git good',
         'yikes',
         'oof',
         'try again',
@@ -17,17 +17,17 @@ export const gameResponses = {
         'you aint getting there',
         'decent run',
         'keep going',
-        'you cant do this this next time'
+        'you cant do this next time'
     ],
     late: [
         'impressive',
         'well done',
-        'legendary',
+        'legenDAIRY',
         'almost there',
-        'so close',
-        'amazing effort',
-        'fantastic',
-        'one more level!'
+        'so close, yet so far...',
+        'amazing effort *clapping noises*',
+        'fantastic, you got this far in a video game',
+        'one more level! one more level!!'
     ]
 };
 
