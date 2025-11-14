@@ -1,6 +1,7 @@
 import { GameContainer } from './game-container.js';
 import { Player } from './player.js';
 import { Enemy } from './enemy.js';
+import { getGameOverResponse } from './game-response.js';
 
 class Game {
     constructor() {
@@ -281,9 +282,13 @@ class Game {
         const gameOverScreen = document.getElementById('gameOverScreen');
         const gameOverLevel = document.getElementById('gameOverLevel');
         const restartBtn = document.getElementById('restartBtn');
+        const responseElement = document.getElementById('gameOverResponse');
         
         gameOverLevel.textContent = this.level;
         gameOverScreen.classList.remove('game-over-hidden');
+        
+        const response = getGameOverResponse(this.level);
+        responseElement.textContent = response;
         
         this.isGameOver = true;
         

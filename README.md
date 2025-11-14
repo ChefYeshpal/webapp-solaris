@@ -1,6 +1,10 @@
 # webapp-solaris
 Just the classic space invader game, why so? because the other option was to make a space engine which I *absolutely do not* knnow how to make within 10 hours
 
+## Credits
+- Art
+    - By yours truly
+    
 ## Here's a list...
 - [ ] Game window
     - [x] 4:3 aspect ratio
