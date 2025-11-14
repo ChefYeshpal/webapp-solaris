@@ -8,6 +8,7 @@ class Game {
         this.gameContainer = new GameContainer(this.canvas);
         this.player = new Player(this.gameContainer.width, this.gameContainer.height);
         this.enemies = [];
+        this.enemyProjectiles = [];
         this.lastTime = 0;
         this.level = 0;
         this.score = 0;
@@ -34,32 +35,45 @@ class Game {
 
         let totalEnemies;
         let enemy2Count = 0;
+        let enemy3Count = 0;
         
         if (this.level === 0) {
             totalEnemies = 3;
             enemy2Count = 0;
+            enemy3Count = 0;
         } else if (this.level === 1) {
             totalEnemies = 4;
             enemy2Count = 0;
+            enemy3Count = 0;
         } else if (this.level === 2) {
             totalEnemies = 7;
             enemy2Count = 0;
+            enemy3Count = 0;
         } else if (this.level === 3) {
             totalEnemies = 7;
             enemy2Count = 2; //30%
+            enemy3Count = 0;
         } else if (this.level === 4) {
             totalEnemies = 8;
             enemy2Count = 4; // 50%
+            enemy3Count = 0;
         } else if (this.level === 5) {
             totalEnemies = 8;
             enemy2Count = 6; // 75%
-        } else if (this.level >= 6) {
-            // Level 6+: Only enemy2
+            enemy3Count = 0;
+        } else if (this.level >= 6 && this.level < 10) {
+            // Level 6-9: Only enemy2
             totalEnemies = 8 + Math.floor((this.level - 6) / 2);
             enemy2Count = totalEnemies; // 100% enemy2
+            enemy3Count = 0;
+        } else if (this.level >= 10) {
+            // Level 10+: Mix of enemy2 and enemy3
+            totalEnemies = 10 + Math.floor((this.level - 10) / 2);
+            enemy2Count = Math.floor(totalEnemies / 2);
+            enemy3Count = totalEnemies - enemy2Count; // 50/50 split
         }
         
-        let enemy1Count = totalEnemies - enemy2Count;
+        let enemy1Count = totalEnemies - enemy2Count - enemy3Count;
 
         // Generate symmetrical enemy patterns
         const numLines = Math.min(Math.floor(Math.random() * 3) + 1, 3); // 1-3 lines
@@ -87,20 +101,23 @@ class Game {
                 
                 // Determine enemy type
                 let enemyType = 1;
-                if (enemy2Count > 0 && enemy1Count > 0) {
-                    // Mix of both types - randomly distribute
-                    const shouldBeEnemy2 = Math.random() < (enemy2Count / (enemy1Count + enemy2Count));
-                    if (shouldBeEnemy2) {
+                const totalOtherEnemies = enemy1Count + enemy2Count + enemy3Count;
+                
+                if (totalOtherEnemies > 0) {
+                    const rand = Math.random();
+                    const enemy1Chance = enemy1Count / totalOtherEnemies;
+                    const enemy2Chance = enemy2Count / totalOtherEnemies;
+                    
+                    if (rand < enemy1Chance) {
+                        enemyType = 1;
+                        enemy1Count--;
+                    } else if (rand < enemy1Chance + enemy2Chance) {
                         enemyType = 2;
                         enemy2Count--;
                     } else {
-                        enemy1Count--;
+                        enemyType = 3;
+                        enemy3Count--;
                     }
-                } else if (enemy2Count > 0) {
-                    enemyType = 2;
-                    enemy2Count--;
-                } else {
-                    enemy1Count--;
                 }
                 
                 this.enemies.push(new Enemy(enemyX, lineY, enemyType));
@@ -144,6 +161,14 @@ class Game {
         this.enemies.forEach(enemy => {
             enemy.update(this.gameContainer.width, deltaTime);
         });
+        
+        // Update orphaned projectiles
+        for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
+            this.enemyProjectiles[i].update();
+            if (this.enemyProjectiles[i].isOffscreen(this.gameContainer.height)) {
+                this.enemyProjectiles.splice(i, 1);
+            }
+        }
 
         this.checkCollisions();
 
@@ -152,6 +177,11 @@ class Game {
         
         this.enemies.forEach(enemy => {
             enemy.draw(this.gameContainer.ctx);
+        });
+        
+        // Draw orphaned projectiles, they probably get better lives but oh anyways...
+        this.enemyProjectiles.forEach(projectile => {
+            projectile.draw(this.gameContainer.ctx);
         });
 
         if (this.countdownActive) {
@@ -194,6 +224,8 @@ class Game {
                     const enemyDestroyed = enemy.takeDamage();
                     
                     if (enemyDestroyed) {
+                        // Transfer enemy projectiles to orphaned list
+                        this.enemyProjectiles.push(...enemy.projectiles);
                         this.enemies.splice(j, 1);
                         this.score += enemy.type;
                         this.updateUI();
@@ -217,6 +249,20 @@ class Game {
                     if (this.lives <= 0) {
                         this.gameOver();
                     }
+                }
+            }
+        }
+        
+        for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
+            const projectile = this.enemyProjectiles[i];
+            
+            if (this.checkPlayerCollision(projectile)) {
+                this.enemyProjectiles.splice(i, 1);
+                this.lives--;
+                this.updateUI();
+                
+                if (this.lives <= 0) {
+                    this.gameOver();
                 }
             }
         }
@@ -249,6 +295,7 @@ class Game {
         this.score = 0;
         this.lives = 5;
         this.enemies = [];
+        this.enemyProjectiles = [];
         this.player.projectiles = [];
         this.countdownActive = false;
         this.countdownTime = 0;
@@ -267,7 +314,6 @@ class Game {
     }
 
     updateUI() {
-        // Format score as 2-digit number with leading zeros
         this.scoreElement.textContent = String(this.score).padStart(2, '0');
         this.livesElement.textContent = String(this.lives);
     }

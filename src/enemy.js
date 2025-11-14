@@ -11,7 +11,7 @@ export class Enemy {
         this.image.src = `assets/enemy${type}.png`;
         this.imageLoaded = false;
         
-        this.maxHealth = type === 1 ? 1 : 2;
+        this.maxHealth = type === 1 ? 1 : type === 2 ? 3 : 5;
         this.health = this.maxHealth;
         
         this.projectiles = [];
@@ -80,6 +80,12 @@ export class Enemy {
             const centerX = this.x + this.width / 2 - 2.5;
             this.projectiles.push(new EnemyProjectile(centerX - spacing / 2, this.y + this.height));
             this.projectiles.push(new EnemyProjectile(centerX + spacing / 2, this.y + this.height));
+        } else if (this.type === 3) {
+            const spacing = 20;
+            const centerX = this.x + this.width / 2 - 2.5;
+            this.projectiles.push(new EnemyProjectile(centerX - spacing, this.y + this.height));
+            this.projectiles.push(new EnemyProjectile(centerX, this.y + this.height));
+            this.projectiles.push(new EnemyProjectile(centerX + spacing, this.y + this.height));
         } else {
             this.projectiles.push(new EnemyProjectile(this.x + this.width / 2 - 2.5, this.y + this.height));
         }
@@ -89,11 +95,17 @@ export class Enemy {
         if (this.imageLoaded) {
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         } else {
-            ctx.fillStyle = this.type === 1 ? '#ff0000' : '#ff00ff';
+            if (this.type === 1) {
+                ctx.fillStyle = '#ff0000';
+            } else if (this.type === 2) {
+                ctx.fillStyle = '#ff00ff';
+            } else {
+                ctx.fillStyle = '#00ffff';
+            }
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
         
-        if (this.type === 2 && this.health < this.maxHealth) {
+        if ((this.type === 2 || this.type === 3) && this.health < this.maxHealth) {
             const healthBarWidth = 40;
             const healthBarHeight = 4;
             const healthBarX = this.x + (this.width - healthBarWidth) / 2;
@@ -103,7 +115,7 @@ export class Enemy {
             ctx.fillRect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
             
             const currentHealthWidth = (this.health / this.maxHealth) * healthBarWidth;
-            ctx.fillStyle = '#00ff00';
+            ctx.fillStyle = this.type === 3 ? '#ffff00' : '#00ff00';
             ctx.fillRect(healthBarX, healthBarY, currentHealthWidth, healthBarHeight);
         }
         
