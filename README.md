@@ -1,5 +1,15 @@
 # webapp-solaris
-Just the classic space invader game, why so? because the other option was to make a space engine which I *absolutely do not* knnow how to make within 10 hours
+Just the classic space invader game, why so? because the other option was to make a space engine which I *absolutely do not* know how to make within 10 hours. This week's siege theme was "space", and I think this game totally does come into the theme... why so?? it's og game literally HAS the word "space" in it!!!
+
+## Controls
+- `A/D` for left/right movement
+- `SPACE` for shoothing
+- `1/2/3` for selecting projectile/lazer/bomb
+
+## Tech Stack
+- **HTML5** - Game structure
+- **CSS** - Styling & layout
+- **JavaScript** - Game logic & mechanics
 
 ## Credits
 - Art
@@ -16,10 +26,10 @@ Just the classic space invader game, why so? because the other option was to mak
     - [x] Mid guys, kill with 2 shots
     - [x] High guys, kill with 5 shots
     - [x] Have a random generation pattern for infinite levels
-- [ ] Projectiles panel
+- [x] Projectiles panel
     - [x] Normal projectiles
     - [x] Lazers
-    - [ ] Bomb
+    - [x] Bomb
 - [ ] Stat panel
     - [x] Lives left (Starts with 5)
     - [x] Info on points
@@ -62,3 +72,12 @@ Just the classic space invader game, why so? because the other option was to mak
     - Added game over responses
     - Added lazer
         - 20 points/sec
+    - Added enemy 4
+        - Even more chonki boi
+        - Fires a lazer
+        - Can only die from a lazer or a bomb pellet
+
+- 15 Nov 2025
+    - Updated enemy4 to show cooldown
+    - Also it shows when they're gonna shoot next
+    - Tried to fix the border of the `game-container`, gave up soon enough
