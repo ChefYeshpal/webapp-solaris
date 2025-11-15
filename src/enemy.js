@@ -1,10 +1,11 @@
 export class Enemy {
-    constructor(x, y, type = 1, level = 0) {
+    constructor(x, y, type = 1, level = 0, groupDirection = null) {
         this.x = x;
         this.y = y;
         this.width = 50;
         this.height = 50;
         this.level = level;
+        this.groupDirection = groupDirection;
         
         if (type === 4) {
             this.speed = 1;
@@ -14,7 +15,6 @@ export class Enemy {
             this.speed = baseSpeed + speedBonus;
         }
         
-        this.direction = 1;
         this.type = type;
         this.image = new Image();
         this.image.src = `assets/enemy${type}.png`;
@@ -89,9 +89,12 @@ export class Enemy {
     }
 
     update(gameWidth, deltaTime) {
-        this.x += this.speed * this.direction;
+        const direction = this.groupDirection ? this.groupDirection.value : 1;
+        this.x += this.speed * direction;
         if (this.x <= 0 || this.x + this.width >= gameWidth) {
-            this.direction *= -1;
+            if (this.groupDirection) {
+                this.groupDirection.value *= -1;
+            }
         }
         
         // Update shooting timer

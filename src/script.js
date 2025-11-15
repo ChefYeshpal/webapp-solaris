@@ -160,6 +160,9 @@ class Game {
         const horizontalSpacing = 80;
         const verticalSpacing = 100;
         const startY = 50;
+        
+        // Create a shared direction object for all enemies in this level
+        const groupDirection = { value: 1 };
 
         let totalEnemies;
         let enemy2Count = 0;
@@ -267,10 +270,16 @@ class Game {
                     }
                 }
                 
-                this.enemies.push(new Enemy(enemyX, lineY, enemyType, this.level));
+                this.enemies.push(new Enemy(enemyX, lineY, enemyType, this.level, groupDirection));
                 enemiesPlaced++;
             }
         }
+    }
+
+    changeAllEnemyDirections() {
+        this.enemies.forEach(enemy => {
+            enemy.direction *= -1;
+        });
     }
 
     start() {
