@@ -251,6 +251,20 @@ export class Enemy {
             ctx.fillRect(healthBarX, healthBarY, currentHealthWidth, healthBarHeight);
         }
         
+        if (this.type === 4) {
+            const cooldownBarWidth = 30;
+            const cooldownBarHeight = 2;
+            const cooldownBarX = this.x + (this.width - cooldownBarWidth) / 2;
+            const cooldownBarY = this.y - 16;
+            
+            ctx.fillStyle = '#333333';
+            ctx.fillRect(cooldownBarX, cooldownBarY, cooldownBarWidth, cooldownBarHeight);
+            
+            const cooldownProgress = (this.shootTimer / this.shootInterval) * cooldownBarWidth;
+            ctx.fillStyle = this.shootTimer >= this.shootInterval ? '#00ff00' : '#ff6600';
+            ctx.fillRect(cooldownBarX, cooldownBarY, cooldownProgress, cooldownBarHeight);
+        }
+        
         if (this.type === 4 && this.lazerBeam) {
             const lazerStartY = this.y + this.height;
             const lazerEndY = 800;
