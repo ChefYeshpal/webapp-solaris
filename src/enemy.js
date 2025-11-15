@@ -39,8 +39,6 @@ export class Enemy {
             this.lazerBeam = null;
             this.lazerDuration = 0;
             this.lazerDurationMax = 2000;
-            this.playerLazerDuration = 0;
-            this.playerLazerRequired = 5000; 
         } else {
             const baseInterval = (Math.random() * 2000) + 2000;
             const intervalReduction = level > 15 ? (level - 15) * 100 : 0;
@@ -70,20 +68,19 @@ export class Enemy {
     }
     
     updateLazerTimer(deltaTime, isLazerHitting) {
-        if (this.type === 4) {
-            if (isLazerHitting) {
-                this.playerLazerDuration += deltaTime;
-            } else {
-                const cooldownRate = 100;
-                this.playerLazerDuration = Math.max(0, this.playerLazerDuration - (deltaTime * cooldownRate / 1000));
+        if (this.type === 4 && isLazerHitting) {
+            const damagePerSecond = 0.5;
+            const damage = (deltaTime / 1000) * damagePerSecond;
+            this.health -= damage;
+            if (this.health < 0) {
+                this.health = 0;
             }
         }
     }
     
     checkLazerDamageThreshold() {
-        if (this.type === 4 && this.playerLazerDuration >= this.playerLazerRequired) {
-            this.playerLazerDuration = 0;
-            return this.takeDamage();
+        if (this.type === 4 && this.health <= 0) {
+            return true;
         }
         return false;
     }
@@ -252,20 +249,6 @@ export class Enemy {
             const currentHealthWidth = (this.health / this.maxHealth) * healthBarWidth;
             ctx.fillStyle = '#0099ff';
             ctx.fillRect(healthBarX, healthBarY, currentHealthWidth, healthBarHeight);
-        }
-        
-        if (this.type === 4 && this.playerLazerDuration > 0) {
-            const timerBarWidth = 40;
-            const timerBarHeight = 4;
-            const timerBarX = this.x + (this.width - timerBarWidth) / 2;
-            const timerBarY = this.y - 5;
-            
-            ctx.fillStyle = '#333333';
-            ctx.fillRect(timerBarX, timerBarY, timerBarWidth, timerBarHeight);
-            
-            const timerProgress = (this.playerLazerDuration / this.playerLazerRequired) * timerBarWidth;
-            ctx.fillStyle = timerProgress >= timerBarWidth ? '#00ff00' : '#ff9900';
-            ctx.fillRect(timerBarX, timerBarY, timerProgress, timerBarHeight);
         }
         
         if (this.type === 4 && this.lazerBeam) {
