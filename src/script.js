@@ -108,6 +108,8 @@ class Game {
         if (this.unlockedWeapons[weaponType]) {
             this.player.currentWeapon = weaponType;
             this.updateWeaponUI();
+        } else {
+            this.showLockedWeaponNotification(weaponType);
         }
     }
 
@@ -118,6 +120,8 @@ class Game {
             }
             this.player.currentWeapon = weaponType;
             this.updateWeaponUI();
+        } else {
+            this.showLockedWeaponNotification(weaponType);
         }
     }
 
@@ -178,6 +182,22 @@ class Game {
         setTimeout(() => {
             notification.remove();
         }, 3500);
+    }
+
+    showLockedWeaponNotification(weaponType) {
+        const unlockLevel = weaponType === 'lazer' ? 9 : (weaponType === 'bomb' ? 11 : null);
+        if (unlockLevel === null) return;
+
+        const bonusContainer = document.getElementById('bonusContainer');
+        const notification = document.createElement('div');
+        notification.className = 'bonus-notification';
+        notification.textContent = `Unlocks at Level ${unlockLevel}`;
+        
+        bonusContainer.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 2000);
     }
 
     initEnemies() {
