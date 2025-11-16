@@ -146,10 +146,12 @@ class Game {
     checkWeaponUnlocks() {
         if (this.level >= 9 && !this.unlockedWeapons.lazer) {
             this.unlockedWeapons.lazer = true;
+            this.score += 100;
             this.updateWeaponUI();
             this.playWeaponUnlockFlash('lazer');
+            this.showBonusNotification();
         }
-        if (this.level >= 12 && !this.unlockedWeapons.bomb) {
+        if (this.level >= 11 && !this.unlockedWeapons.bomb) {
             this.unlockedWeapons.bomb = true;
             this.updateWeaponUI();
             this.playWeaponUnlockFlash('bomb');
@@ -163,6 +165,19 @@ class Game {
         setTimeout(() => {
             box.classList.remove('unlock-flash');
         }, 1000);
+    }
+
+    showBonusNotification() {
+        const bonusContainer = document.getElementById('bonusContainer');
+        const notification = document.createElement('div');
+        notification.className = 'bonus-notification';
+        notification.textContent = 'BONUS POINTS GRANTED';
+        
+        bonusContainer.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3500);
     }
 
     initEnemies() {
