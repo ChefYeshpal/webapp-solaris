@@ -76,8 +76,12 @@ Just the classic space invader game, why so? because the other option was to mak
         - Even more chonki boi
         - Fires a lazer
         - Can only die from a lazer or a bomb pellet
-
 - 15 Nov 2025
     - Updated enemy4 to show cooldown
     - Also it shows when they're gonna shoot next
     - Tried to fix the border of the `game-container`, gave up soon enough
+- 16 Nov 2025
+    - Updated enemy spawning to be a little more earlier
+        - It just felt dragged out for some reason, and couldn't reach enemy4 easily
+        - The players need to know pain.
+    - 
