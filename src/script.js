@@ -137,7 +137,6 @@ class Game {
                 box.classList.add('locked');
             }
             
-            // Add active class if current weapon
             if (this.player.currentWeapon === weaponType) {
                 box.classList.add('active');
             }
@@ -148,11 +147,22 @@ class Game {
         if (this.level >= 9 && !this.unlockedWeapons.lazer) {
             this.unlockedWeapons.lazer = true;
             this.updateWeaponUI();
+            this.playWeaponUnlockFlash('lazer');
         }
         if (this.level >= 12 && !this.unlockedWeapons.bomb) {
             this.unlockedWeapons.bomb = true;
             this.updateWeaponUI();
+            this.playWeaponUnlockFlash('bomb');
         }
+    }
+
+    playWeaponUnlockFlash(weaponType) {
+        const box = this.weaponBoxes[weaponType];
+        box.classList.add('unlock-flash');
+        
+        setTimeout(() => {
+            box.classList.remove('unlock-flash');
+        }, 1000);
     }
 
     initEnemies() {
@@ -332,7 +342,7 @@ class Game {
             enemy.update(this.gameContainer.width, deltaTime);
         });
         
-        // Update orphaned projectiles
+        // Update orphaned projectiles, yum yum tasty
         for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
             this.enemyProjectiles[i].update();
             if (this.enemyProjectiles[i].isOffscreen(this.gameContainer.height)) {
@@ -651,7 +661,6 @@ class Game {
 
 window.addEventListener('load', () => {
     const game = new Game();
-    // Expose game instance to console for testing
     window.game = game;
     console.log('Game loaded, Use window.game.skipToLevel() to skip to specified');
 });
