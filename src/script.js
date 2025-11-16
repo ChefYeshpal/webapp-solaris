@@ -145,11 +145,11 @@ class Game {
     }
 
     checkWeaponUnlocks() {
-        if (this.level >= 12 && !this.unlockedWeapons.lazer) {
+        if (this.level >= 9 && !this.unlockedWeapons.lazer) {
             this.unlockedWeapons.lazer = true;
             this.updateWeaponUI();
         }
-        if (this.level >= 20 && !this.unlockedWeapons.bomb) {
+        if (this.level >= 12 && !this.unlockedWeapons.bomb) {
             this.unlockedWeapons.bomb = true;
             this.updateWeaponUI();
         }
@@ -199,21 +199,18 @@ class Game {
             enemy2Count = 6; // 75%
             enemy3Count = 0;
             enemy4Count = 0;
-        } else if (this.level >= 6 && this.level < 10) {
-            // Level 6-9: Only enemy2
+        } else if (this.level >= 6 && this.level < 8) {
             totalEnemies = 8 + Math.floor((this.level - 6) / 2);
-            enemy2Count = totalEnemies; // 100% enemy2
+            enemy2Count = totalEnemies; 
             enemy3Count = 0;
             enemy4Count = 0;
-        } else if (this.level >= 10 && this.level < 20) {
-            // Level 10-19: Mix of enemy2 and enemy3
-            totalEnemies = 10 + Math.floor((this.level - 10) / 2);
+        } else if (this.level >= 8 && this.level < 11) {
+            totalEnemies = 10 + Math.floor((this.level - 8) / 2);
             enemy2Count = Math.floor(totalEnemies / 2);
             enemy3Count = totalEnemies - enemy2Count; // 50/50 split
             enemy4Count = 0;
-        } else if (this.level >= 20) {
-            // Level 20+: Mix of enemy2, enemy3, and enemy4
-            totalEnemies = 11 + Math.floor((this.level - 20) / 2);
+        } else if (this.level >= 11) {
+            totalEnemies = 11 + Math.floor((this.level - 11) / 2);
             enemy2Count = Math.floor(totalEnemies / 3);
             enemy3Count = Math.floor(totalEnemies / 3);
             enemy4Count = Math.min(3, totalEnemies - enemy2Count - enemy3Count);
