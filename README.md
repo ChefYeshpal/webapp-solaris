@@ -30,7 +30,7 @@ Just the classic space invader game, why so? because the other option was to mak
     - [x] Normal projectiles
     - [x] Lazers
     - [x] Bomb
-- [ ] Stat panel
+- [x] Stat panel
     - [x] Lives left (Starts with 5)
     - [x] Info on points
 - [x] Game over screen

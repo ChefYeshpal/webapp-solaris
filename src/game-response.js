@@ -7,7 +7,8 @@ export const gameResponses = {
         'oof',
         'try again',
         'git gud',
-        'oof size: large'
+        'oof size: large',
+        'rick is slightly dissapointed...'
     ],
     mid: [
         'not bad',
@@ -17,17 +18,19 @@ export const gameResponses = {
         'you aint getting there',
         'decent run',
         'keep going',
-        'you cant do this next time'
+        'oof size: mid',
+        'rick is proud of you'
     ],
     late: [
-        'impressive',
+        'oof size: smol',
         'well done',
         'legenDAIRY',
-        'almost there',
+        'almost there, almost where?',
         'so close, yet so far...',
         'amazing effort *clapping noises*',
         'fantastic, you got this far in a video game',
-        'one more level! one more level!!'
+        'one more level! one more level!!',
+        'never gonna give you up, never gonna let you down'
     ]
 };
 
