@@ -366,18 +366,6 @@ class Game {
         }
 
         this.checkCollisions();
-        
-        for (let i = this.player.projectiles.length - 1; i >= 0; i--) {
-            const projectile = this.player.projectiles[i];
-            if (projectile.isBomb && !projectile.hasCost) {
-                projectile.hasCost = true;
-                this.score -= 30;
-                if (this.score < 0) {
-                    this.score = 0;
-                }
-                this.updateUI();
-            }
-        }
 
         this.gameContainer.draw();
         this.player.draw(this.gameContainer.ctx);
@@ -465,8 +453,6 @@ class Game {
                             if (enemyDestroyed) {
                                 this.enemyProjectiles.push(...enemy.projectiles);
                                 this.enemies.splice(k, 1);
-                                this.score += enemy.type;
-                                this.updateUI();
                             }
                         }
                     }
