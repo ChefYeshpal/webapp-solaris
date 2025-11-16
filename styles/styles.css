@@ -84,6 +84,25 @@ body, html {
     min-height: 20px;
 }
 
+.game-over-footer {
+    font-size: 14px;
+    color: #00ff00;
+    font-family: 'Press Start 2P', cursive;
+    margin-top: 20px;
+}
+
+.github-link {
+    color: #10a817;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.github-link:hover {
+    color: #15d31f;
+    text-shadow: 0 0 10px rgba(36, 202, 30, 0.8);
+}
+
 .restart-button {
     padding: 15px 40px;
     font-size: 20px;
