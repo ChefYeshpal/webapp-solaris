@@ -15,8 +15,8 @@ Just the classic space invader game, why so? because the other option was to mak
 - Art
     - By yours truly
 - Music
-    - Laser-prepre-sound by Alexander https://orangefreesounds.com/laser-pew-sound-effect/
-    - 482280_seanporio_lazer-puck-9 by Sean Porio https://freesound.org/people/SeanPorio/sounds/482280/
+    - [Laser-prepre-sound](https://orangefreesounds.com/laser-pew-sound-effect/) by Alexander
+    - [482280_seanporio_lazer-puck-9](https://freesound.org/people/SeanPorio/sounds/482280/) by Sean Porio
     
 ## Here's a list...
 - [x] Game window
@@ -87,4 +87,9 @@ Just the classic space invader game, why so? because the other option was to mak
     - Updated enemy spawning to be a little more earlier
         - It just felt dragged out for some reason, and couldn't reach enemy4 easily
         - The players need to know pain.
-    - 
+    - Added flashing when weapons are unlocked
+    - Changed level spawning to make the game feel a bit more faster
+- 17 Nov 2025
+    - Added sounds
+    - Nothing else really...
+
