@@ -1,3 +1,5 @@
+import { soundManager } from './sound-manager.js';
+
 export class Enemy {
     constructor(x, y, type = 1, level = 0, groupDirection = null) {
         this.x = x;
@@ -111,6 +113,7 @@ export class Enemy {
             if (this.lazerDuration >= this.lazerDurationMax) {
                 this.lazerBeam = null;
                 this.lazerDuration = 0;
+                soundManager.stopLoopingLazerSound();
             }
         }
         
@@ -159,11 +162,13 @@ export class Enemy {
         if (this.type === 4) {
             this.lazerBeam = { active: true };
             this.lazerDuration = 0;
+            soundManager.playLoopingLazerSound();
         } else if (this.type === 2) {
             const spacing = 15; 
             const centerX = this.x + this.width / 2 - 2.5;
             this.projectiles.push(new EnemyProjectile(centerX - spacing / 2, this.y + this.height));
             this.projectiles.push(new EnemyProjectile(centerX + spacing / 2, this.y + this.height));
+            soundManager.playLaserSound();
         } else if (this.type === 3) {
             const spacing = 20;
             const centerX = this.x + this.width / 2 - 2.5;
@@ -171,8 +176,10 @@ export class Enemy {
             this.projectiles.push(new EnemyProjectile(centerX, this.y + this.height));
             this.projectiles.push(new EnemyProjectile(centerX + spacing, this.y + this.height));
             this.enemy3SecondShotTimer = this.enemy3SecondShotDelay;
+            soundManager.playLaserSound();
         } else {
             this.projectiles.push(new EnemyProjectile(this.x + this.width / 2 - 2.5, this.y + this.height));
+            soundManager.playLaserSound();
         }
     }
     

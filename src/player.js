@@ -1,4 +1,5 @@
 import { Projectile } from './projectile.js';
+import { soundManager } from './sound-manager.js';
 
 export class Player {
     constructor(gameWidth, gameHeight) {
@@ -94,6 +95,7 @@ export class Player {
             }
             this.lazerBeam = null;
         }
+        soundManager.stopLoopingLazerSound();
     }
 
     activateLazer() {
@@ -104,6 +106,7 @@ export class Player {
             const lazerY = this.y;
             this.lazerBeam = new Projectile(lazerX, lazerY, 'lazer');
             this.projectiles.push(this.lazerBeam);
+            soundManager.playLoopingLazerSound();
         }
     }
 
@@ -123,6 +126,7 @@ export class Player {
             } else {
                 this.projectiles.push(new Projectile(projectileX, projectileY));
             }
+            soundManager.playLaserSound();
             this.shootCooldown = this.shootCooldownMax;
         }
     }
