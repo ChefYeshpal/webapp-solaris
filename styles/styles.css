@@ -54,6 +54,23 @@ body, html {
     display: none;
 }
 
+#initialScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    background-color: transparent;
+}
+
+#initialScreen.initial-screen-hidden {
+    display: none;
+}
+
 .game-over-content {
     text-align: center;
     display: flex;
@@ -67,6 +84,22 @@ body, html {
     color: #ff0000;
     margin: 0;
     text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+    font-family: 'Press Start 2P', cursive;
+}
+
+.initial-screen-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+}
+
+.initial-screen-content h1 {
+    font-size: 48px;
+    color: #00ff00;
+    margin: 0;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
     font-family: 'Press Start 2P', cursive;
 }
 
@@ -122,6 +155,59 @@ body, html {
 
 .restart-button:active {
     transform: scale(0.95);
+}
+
+.start-button {
+    padding: 15px 40px;
+    font-size: 20px;
+    font-family: 'Press Start 2P', cursive;
+    background-color: transparent;
+    color: #00ff00;
+    border: 3px solid #00ff00;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.start-button:hover {
+    background-color: #00ff00;
+    color: #000000;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+}
+
+.start-button:active {
+    transform: scale(0.95);
+}
+
+.controls-list {
+    font-size: 16px;
+    color: #00ff00;
+    font-family: 'Press Start 2P', cursive;
+    line-height: 1.8;
+}
+
+.controls-list p {
+    margin: 0;
+}
+
+.weapon-unlock-info {
+    font-size: 14px;
+    color: #ffaa00;
+    font-family: 'Press Start 2P', cursive;
+    line-height: 1.6;
+    border-top: 2px solid #ffaa00;
+    border-bottom: 2px solid #ffaa00;
+    padding: 15px 20px;
+}
+
+.weapon-unlock-info p {
+    margin: 0;
+}
+
+.initial-screen-footer {
+    font-size: 14px;
+    color: #00ff00;
+    font-family: 'Press Start 2P', cursive;
+    margin-top: 20px;
 }
 
 #sidePanel {

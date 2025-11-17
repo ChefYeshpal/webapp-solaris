@@ -18,6 +18,7 @@ class Game {
         this.countdownTime = 0;
         this.countdownDuration = 5000;
         this.isGameOver = false;
+        this.gameStarted = false;
         
         // Weapon unlocking system
         this.unlockedWeapons = {
@@ -39,6 +40,7 @@ class Game {
         };
         
         this.setupWeaponUI();
+        this.setupInitialScreen();
         this.initEnemies();
         this.updateUI();
         this.start();
@@ -67,6 +69,11 @@ class Game {
         });
         
         this.updateWeaponUI();
+    }
+
+    setupInitialScreen() {
+        const startBtn = document.getElementById('startBtn');
+        startBtn.onclick = () => this.startGame();
     }
 
     handleSecretKeyPress() {
@@ -330,6 +337,11 @@ class Game {
 
     gameLoop(timestamp) {
         if (this.isGameOver) {
+            requestAnimationFrame((time) => this.gameLoop(time));
+            return;
+        }
+        
+        if (!this.gameStarted) {
             requestAnimationFrame((time) => this.gameLoop(time));
             return;
         }
@@ -639,6 +651,7 @@ class Game {
         this.countdownActive = false;
         this.countdownTime = 0;
         this.isGameOver = false;
+        this.gameStarted = false;
         
         this.unlockedWeapons = {
             projectile: true,
@@ -650,6 +663,9 @@ class Game {
         
         const gameOverScreen = document.getElementById('gameOverScreen');
         gameOverScreen.classList.add('game-over-hidden');
+        
+        const initialScreen = document.getElementById('initialScreen');
+        initialScreen.classList.remove('initial-screen-hidden');
         
         this.player.x = this.gameContainer.width / 2 - this.player.width / 2;
         
@@ -677,6 +693,13 @@ class Game {
         this.updateWeaponUI();
         this.initEnemies();
         console.log(`Skipped to level ${targetLevel}`);
+    }
+
+    startGame() {
+        const initialScreen = document.getElementById('initialScreen');
+        initialScreen.classList.add('initial-screen-hidden');
+        this.gameStarted = true;
+        this.lastTime = performance.now();
     }
 }
 
