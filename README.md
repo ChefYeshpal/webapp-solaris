@@ -13,7 +13,7 @@ Just the classic space invader game, why so? because the other option was to mak
 
 ## Credits
 - Art
-    - By yours truly
+    - By yours truly... that's me!
 - Music
     - [Laser-prepre-sound](https://orangefreesounds.com/laser-pew-sound-effect/) by Alexander
     - [482280_seanporio_lazer-puck-9](https://freesound.org/people/SeanPorio/sounds/482280/) by Sean Porio
@@ -92,4 +92,4 @@ Just the classic space invader game, why so? because the other option was to mak
 - 17 Nov 2025
     - Added sounds
     - Nothing else really...
-
+    - Added initial game screen
