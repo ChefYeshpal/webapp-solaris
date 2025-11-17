@@ -14,6 +14,9 @@ Just the classic space invader game, why so? because the other option was to mak
 ## Credits
 - Art
     - By yours truly
+- Music
+    - Laser-prepre-sound by Alexander https://orangefreesounds.com/laser-pew-sound-effect/
+    - 482280_seanporio_lazer-puck-9 by Sean Porio https://freesound.org/people/SeanPorio/sounds/482280/
     
 ## Here's a list...
 - [x] Game window
